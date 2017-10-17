@@ -1,5 +1,5 @@
-var __utils  = require('./lib/utils.js'),
-    __token  = require('./lib/token.js'),
+var __utils = require('./lib/utils.js'),
+    __token = require('./lib/token.js'),
     __cookie = require('./lib/cookie.js')
 
 module.exports = function () {
@@ -35,13 +35,13 @@ module.exports = function () {
 
     function _checkAuthenticated(cb) {
         if (this.watch.authenticated === null && __token.get.call(this)) {
-            if ( ! __cookie.exists.call(this)) {
-                this.options.logoutProcess.call(this, null, {});
+            // if ( ! __cookie.exists.call(this)) {
+            //     this.options.logoutProcess.call(this, null, {});
 
-                this.watch.loaded = true;
+            //     this.watch.loaded = true;
 
-                return cb.call(this);
-            }
+            //     return cb.call(this);
+            // }
 
             this.watch.authenticated = false;
 
@@ -88,21 +88,21 @@ module.exports = function () {
             notFoundRedirect = (routeAuth || '').redirect || this.options.notFoundRedirect;
 
         routeAuth = __utils.toArray((routeAuth || '').roles || routeAuth);
-        
+
         __transitionPrev = __transitionThis;
         __transitionThis = transition;
 
         if (routeAuth && (routeAuth === true || routeAuth.constructor === Array)) {
-            if ( ! this.check()) {
+            if (!this.check()) {
                 __transitionRedirecType = 401;
                 cb.call(this, authRedirect);
             }
-            else if (routeAuth.constructor === Array && ! __utils.compare(routeAuth, this.watch.data[this.options.rolesVar])) {
+            else if (routeAuth.constructor === Array && !__utils.compare(routeAuth, this.watch.data[this.options.rolesVar])) {
                 __transitionRedirecType = 403;
                 cb.call(this, forbiddenRedirect);
             }
             else {
-                this.watch.redirect = __transitionRedirecType ? {type: __transitionRedirecType, from: __transitionPrev, to: __transitionThis} : null;
+                this.watch.redirect = __transitionRedirecType ? { type: __transitionRedirecType, from: __transitionPrev, to: __transitionThis } : null;
                 __transitionRedirecType = null;
 
                 return cb();
@@ -113,7 +113,7 @@ module.exports = function () {
             cb.call(this, notFoundRedirect);
         }
         else {
-            this.watch.redirect = __transitionRedirecType ? {type: __transitionRedirecType, from: __transitionPrev, to: __transitionThis} : null;
+            this.watch.redirect = __transitionRedirecType ? { type: __transitionRedirecType, from: __transitionPrev, to: __transitionThis } : null;
             __transitionRedirecType = null;
 
             return cb();
@@ -131,7 +131,7 @@ module.exports = function () {
         if (req.impersonating === false && this.impersonating()) {
             tokenName = this.options.tokenDefaultName;
         }
-        
+
         token = __token.get.call(this, tokenName);
 
         if (token) {
@@ -179,15 +179,15 @@ module.exports = function () {
         return false;
     }
 
-    function _tokenExpired () {
-        return ! this.watch.loaded && __token.get.call(this);
+    function _tokenExpired() {
+        return !this.watch.loaded && __token.get.call(this);
     }
 
-    function _cookieDomain () {
+    function _cookieDomain() {
         return window.location.hostname;
     }
 
-    function _getUrl () {
+    function _getUrl() {
         var port = window.location.port
 
         return window.location.protocol + '//' + window.location.hostname + (port ? ':' + port : '')
@@ -214,7 +214,7 @@ module.exports = function () {
     function _fetchProcess(res, data) {
         this.watch.authenticated = true;
         this.watch.data = this.options.parseUserData.call(this, this.options.http._httpData.call(this, res));
-        
+
         this.watch.loaded = true;
 
         if (data.success) { data.success.call(this, res); }
@@ -234,7 +234,7 @@ module.exports = function () {
 
     function _registerProcess(res, data) {
         if (data.autoLogin === true) {
-            data = __utils.extend(data, [this.options.loginData, {redirect: data.redirect}]);
+            data = __utils.extend(data, [this.options.loginData, { redirect: data.redirect }]);
 
             this.options.loginPerform.call(this, data);
         }
@@ -399,28 +399,28 @@ module.exports = function () {
 
         // Variables
 
-        rolesVar:             'roles',
+        rolesVar: 'roles',
         tokenImpersonateName: 'impersonate_auth_token',
-        tokenDefaultName:     'default_auth_token',
-        tokenStore:           ['localStorage', 'cookie'],
+        tokenDefaultName: 'default_auth_token',
+        tokenStore: ['localStorage', 'cookie'],
 
         // Objects
 
-        authRedirect:       {path: '/login'},
-        forbiddenRedirect:  {path: '/403'},
-        notFoundRedirect:   {path: '/404'},
+        authRedirect: { path: '/login' },
+        forbiddenRedirect: { path: '/403' },
+        notFoundRedirect: { path: '/404' },
 
-        registerData:       {url: 'auth/register',      method: 'POST', redirect: '/login'},
-        loginData:          {url: 'auth/login',         method: 'POST', redirect: '/', fetchUser: true},
-        logoutData:         {url: 'auth/logout',        method: 'POST', redirect: '/', makeRequest: false},
-        oauth1Data:         {url: 'auth/login',         method: 'POST'},
-        fetchData:          {url: 'auth/user',          method: 'GET', enabled: true},
-        refreshData:        {url: 'auth/refresh',       method: 'GET', enabled: true, interval: 30},
-        impersonateData:    {url: 'auth/impersonate',   method: 'POST', redirect: '/'},
-        unimpersonateData:  {url: 'auth/unimpersonate', method: 'POST', redirect: '/admin', makeRequest: false},
+        registerData: { url: 'auth/register', method: 'POST', redirect: '/login' },
+        loginData: { url: 'auth/login', method: 'POST', redirect: '/', fetchUser: true },
+        logoutData: { url: 'auth/logout', method: 'POST', redirect: '/', makeRequest: false },
+        oauth1Data: { url: 'auth/login', method: 'POST' },
+        fetchData: { url: 'auth/user', method: 'GET', enabled: true },
+        refreshData: { url: 'auth/refresh', method: 'GET', enabled: true, interval: 30 },
+        impersonateData: { url: 'auth/impersonate', method: 'POST', redirect: '/' },
+        unimpersonateData: { url: 'auth/unimpersonate', method: 'POST', redirect: '/admin', makeRequest: false },
 
-        facebookData:       {url: 'auth/facebook',      method: 'POST', redirect: '/'},
-        googleData:         {url: 'auth/google',        method: 'POST', redirect: '/'},
+        facebookData: { url: 'auth/facebook', method: 'POST', redirect: '/' },
+        googleData: { url: 'auth/google', method: 'POST', redirect: '/' },
 
         facebookOauth2Data: {
             url: 'https://www.facebook.com/v2.5/dialog/oauth',
@@ -437,45 +437,45 @@ module.exports = function () {
 
         // Internal
 
-        getUrl:             _getUrl,
-        cookieDomain:       _cookieDomain,
-        parseUserData:      _parseUserData,
-        parseOauthState:    _parseOauthState,
-        tokenExpired:       _tokenExpired,
-        check:              _check,
+        getUrl: _getUrl,
+        cookieDomain: _cookieDomain,
+        parseUserData: _parseUserData,
+        parseOauthState: _parseOauthState,
+        tokenExpired: _tokenExpired,
+        check: _check,
         checkAuthenticated: _checkAuthenticated,
 
-        readyCallback:      null,
+        readyCallback: null,
 
-        transitionEach:     _transitionEach,
-        routerBeforeEach:   _routerBeforeEach,
-        requestIntercept:   _requestIntercept,
-        responseIntercept:  _responseIntercept,
+        transitionEach: _transitionEach,
+        routerBeforeEach: _routerBeforeEach,
+        requestIntercept: _requestIntercept,
+        responseIntercept: _responseIntercept,
 
         // Contextual
 
-        registerPerform:    _registerPerform,
-        registerProcess:    _registerProcess,
+        registerPerform: _registerPerform,
+        registerProcess: _registerProcess,
 
-        loginPerform:       _loginPerform,
-        loginProcess:       _loginProcess,
+        loginPerform: _loginPerform,
+        loginProcess: _loginProcess,
 
-        logoutPerform:      _logoutPerform,
-        logoutProcess:      _logoutProcess,
+        logoutPerform: _logoutPerform,
+        logoutProcess: _logoutProcess,
 
-        fetchPerform:       _fetchPerform,
-        fetchProcess:       _fetchProcess,
+        fetchPerform: _fetchPerform,
+        fetchProcess: _fetchProcess,
 
-        refreshPerform:     _refreshPerform,
-        refreshProcess:     _refreshProcess,
+        refreshPerform: _refreshPerform,
+        refreshProcess: _refreshProcess,
 
-        impersonatePerform:  _impersonatePerform,
-        impersonateProcess:  _impersonateProcess,
+        impersonatePerform: _impersonatePerform,
+        impersonateProcess: _impersonateProcess,
 
         unimpersonatePerform: _unimpersonatePerform,
         unimpersonateProcess: _unimpersonateProcess,
 
-        oauth2Perform:      _oauth2Perform
+        oauth2Perform: _oauth2Perform
     };
 
     function Auth(Vue, options) {
@@ -510,7 +510,7 @@ module.exports = function () {
 
         // Check drivers.
         for (i = 0, ii = drivers.length; i < ii; i++) {
-            if ( ! this.options[drivers[i]]) {
+            if (!this.options[drivers[i]]) {
                 console.error('Error (@websanova/vue-auth): "' + drivers[i] + '" driver must be set.');
                 return;
             }
@@ -619,7 +619,7 @@ module.exports = function () {
         if (this.impersonating()) {
             this.currentToken = this.options.tokenDefaultName;
         }
-    }; 
+    };
 
     return Auth;
 };
